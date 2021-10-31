@@ -1,16 +1,16 @@
 import Player from '@vimeo/player';
-import throttle from 'lodash.throttle';
+import throttle from 'lodash/throttle';
 
-const options = {
-    id: 59777392,
+const player = new Player('vimeo-player', {
+    id: 236203659,
     width: 640,
-    loop: true
+});
+
+player.on('timeupdate', throttle(onPlayerTimeUpdate, 1000));
+
+function onPlayerTimeUpdate(event) {
+    localStorage.setItem('videoplayer-current-time', `${event.seconds}`)
 };
 
-const player = new Vimeo.Player('made-in-ny', options);
-
-player.setVolume(0);
-
-player.on('eventName', function(data) {
-    
-});
+const resumePlayback = localStorage.getItem('videoplayer-current-time');
+player.setCurrentTime(savedTime);
