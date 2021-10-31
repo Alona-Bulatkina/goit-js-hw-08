@@ -13,4 +13,4 @@ function onPlayerTimeUpdate(event) {
 };
 
 const resumePlayback = localStorage.getItem('videoplayer-current-time');
-player.setCurrentTime(savedTime);
+player.setCurrentTime(resumePlayback);
