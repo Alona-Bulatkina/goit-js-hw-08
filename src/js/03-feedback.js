@@ -11,14 +11,14 @@ filterForm.addEventListener('submit', evt => {
     formData.forEach((value, name) => console.log(value, name));
 });
 
-// filterForm.addEventListener('input', throttle(filterForm, 500));
-
-filterForm.addEventListener('change', evt => {
+function onFilterFormChange (evt) {
 let persistedFilters = localStorage.getItem(LOCALSSTORAGE_KEY);
 persistedFilters = persistedFilters ? JSON.parse(persistedFilters) : {};
 persistedFilters[evt.target.name] = evt.target.value;
 localStorage.setItem(LOCALSSTORAGE_KEY, JSON.stringify(persistedFilters));
-});
+};
+
+filterForm.addEventListener('change', throttle(onFilterFormChange, 500));
 
 function initForm () {
     let persistedFilters = localStorage.getItem(LOCALSSTORAGE_KEY);
