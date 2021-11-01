@@ -8,7 +8,7 @@ initForm();
 filterForm.addEventListener('submit', evt => {
     evt.preventDefault();
     const formData = new FormData(filterForm);
-    formData.forEach((value, name) => console.log(value, name));
+    formData.forEach((value, name) => console.log('feedback-form-state', value, name));
 });
 
 function onFilterFormChange (evt) {
