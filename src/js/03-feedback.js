@@ -1,31 +1,40 @@
 import throttle from 'lodash.throttle';
 
-const LOCALSSTORAGE_KEY = 'feedback-form-state'
-const filterForm = document.querySelector('.feedback-form');
+const LOCALSTORAGE_KEY = 'feedback-form-state';
 
-initForm();
-
-filterForm.addEventListener('submit', evt => {
-    evt.preventDefault();
-    const formData = new FormData(filterForm);
-    formData.forEach((value, name) => console.log('feedback-form-state', value, name));
-});
-
-function onFilterFormChange (evt) {
-let persistedFilters = localStorage.getItem(LOCALSSTORAGE_KEY);
-persistedFilters = persistedFilters ? JSON.parse(persistedFilters) : {};
-persistedFilters[evt.target.name] = evt.target.value;
-localStorage.setItem(LOCALSSTORAGE_KEY, JSON.stringify(persistedFilters));
+const refs = {
+    form: document.querySelector('.feedback-form'),
+    mail: document.querySelector('.feedback-form input'),
+    textarea: document.querySelector('.feedback-form textarea'),
 };
 
-filterForm.addEventListener('change', throttle(onFilterFormChange, 500));
+const formData = {};
 
-function initForm () {
-    let persistedFilters = localStorage.getItem(LOCALSSTORAGE_KEY);
-    if (persistedFilters) {
-        persistedFilters = JSON.parse(persistedFilters);
-        Object.entries(persistedFilters).forEach(([name, value]) => {
-        filterForm.elements[name].value = value;
-    });
+refs.form.addEventListener('submit', onFormSubmit);
+refs.form.addEventListener('input', throttle(onFormInput, 500));
+
+populateTextarea();
+
+function onFormInput(event) {
+    formData[event.target.name] = event.target.value;
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(formData));
+}
+
+function onFormSubmit(event) {
+    event.preventDefault();
+    event.target.reset();
+    console.log('feedback-form-state', JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)));
+    localStorage.removeItem(LOCALSTORAGE_KEY);
+};
+
+function populateTextarea() {
+    const savedMessage = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY));
+
+    if (savedMessage && savedMessage.message) {
+    refs.textarea.value = savedMessage.message;
+    };
+    
+    if (savedMessage && savedMessage.email) {
+    refs.mail.value = savedMessage.email;
     };
 };
