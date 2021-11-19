@@ -12,8 +12,7 @@ function onPlayerTimeUpdate(event) {
     localStorage.setItem('videoplayer-current-time', `${event.seconds}`)
 };
 
-if (resumePlayback === true) {
-    localStorage.getItem('videoplayer-current-time');
-    player.setCurrentTime(resumePlayback);
-}
+const resumePlayback = localStorage.getItem('videoplayer-current-time');
+if (resumePlayback) {
+player.setCurrentTime(resumePlayback);}
 
