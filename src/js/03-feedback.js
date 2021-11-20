@@ -10,22 +10,23 @@ const dataRef = {
 
 let formData = {};
 
-function onInput(event) {
-    formData[event.target.name] = event.target.value;
-    localStorage.setItem(storageKey, JSON.stringify(formData));
-}
+dataRef.form.addEventListener('submit', onSubmit);
+dataRef.form.addEventListener('input', throttle(onInput, 500)); 
 
 function onSubmit(event) {
     event.preventDefault();
-    event.target.reset();
-    console.log('feedback-form-state', JSON.parse(localStorage.getItem(storageKey)));
+    const formData = new FormData(dataRef.form);
+    formData.forEach((value, name) => console.log(value, name));
+    event.currentTarget.reset();
     localStorage.removeItem(storageKey);
 };
 
-dataRef.form.addEventListener('reset', evt => {
-    formData = {};
-    localStorage.removeItem('formData');
-});
+function onInput(event) {
+    let persistedInfo = localStorage.getItem(storageKey);
+    persistedInfo = persistedInfo ? JSON.parse(persistedInfo) : {};
+    persistedInfo[event.target.name] = event.target.value;
+    localStorage.setItem(storageKey, JSON.stringify(persistedInfo));
+}
 
 function textareaSavedData() {
     const savedMessage = JSON.parse(localStorage.getItem(storageKey));
@@ -39,8 +40,5 @@ function textareaSavedData() {
     };
     
  };
-
-dataRef.form.addEventListener('submit', onSubmit);
-dataRef.form.addEventListener('input', throttle(onInput, 500));
 
 textareaSavedData();
